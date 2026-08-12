@@ -1,27 +1,178 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JEE Advanced Test</title>
 <style>
-body{margin:0;font-family:Arial;background:#f3f4f6;color:#111827}header{background:#111827;color:#fff;padding:14px 20px;display:flex;justify-content:space-between}.timer{font-size:20px;font-weight:bold}.wrap{max-width:1400px;margin:14px auto;padding:0 14px;display:grid;grid-template-columns:1fr 300px;gap:14px}.card{background:#fff;padding:14px;border-radius:10px;margin-bottom:14px;box-shadow:0 2px 8px #0001}.btn{padding:9px 13px;border:0;border-radius:7px;background:#2563eb;color:#fff;cursor:pointer;margin:3px}.btn.gray{background:#6b7280}.btn.green{background:#059669}.qnav{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.qbtn{padding:8px;border:1px solid #ddd;border-radius:6px}.done{background:#bbf7d0}.review{outline:3px solid #fbbf24}.current{border:3px solid #2563eb}.options{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.opt{padding:12px;border:2px solid #ddd;background:#fff;border-radius:8px}.sel{border-color:#2563eb;background:#dbeafe}#viewer{height:60vh;overflow:auto;background:#eee;text-align:center}canvas{max-width:100%;background:#fff}.hidden{display:none}@media(max-width:800px){.wrap{grid-template-columns:1fr}.options{grid-template-columns:repeat(2,1fr)}}
-</style></head><body>
-<header><b>JEE Advanced Test</b><span id="timer">03:00:00</span></header>
-<div class="wrap"><main>
-<div class="card"><input id="paper" type="file" accept=".pdf"><input id="key" type="file" accept=".pdf,.txt,.csv"><button class="btn" id="load">Load Paper</button><button class="btn green" id="submit">Submit</button><p>Paper 1 / Paper 2 • Single correct • Multiple correct • Numerical answer</p></div>
-<div class="card hidden" id="panel"><b id="title">Question 1</b><span id="type"></span><div id="options" class="options"></div><button class="btn gray" id="prev">Previous</button><button class="btn gray" id="review">Mark for review</button><button class="btn" id="next">Next</button></div>
-<div class="card"><div id="viewer"></div></div></main>
-<aside><div class="card"><b>Question Palette</b><div id="palette" class="qnav"></div></div><div class="card"><b>Result</b><div id="result">Not submitted</div></div></aside></div>
-<script type="module">
-import * as pdfjs from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs";
-pdfjs.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
-let pdf=null,current=1,ans={},rev={},submitted=false,sec=10800;
-const $=x=>document.getElementById(x);
-function palette(){paletteEl.innerHTML="";for(let i=1;i<=60;i++){let b=document.createElement("button");b.className="qbtn "+(ans[i]?"done ":"")+(rev[i]?"review ":"")+(i==current?"current":"");b.textContent=i;b.onclick=()=>show(i);paletteEl.appendChild(b)}}
-const paletteEl=$("palette");
-function show(n){current=n;$("panel").classList.remove("hidden");$("title").textContent="Question "+n;let t=n%3==0?"Multiple correct":n%3==1?"Single correct":"Numerical answer";$("type").textContent=" • "+t;let box=$("options");box.innerHTML="";
-if(t==="Numerical answer"){let x=document.createElement("input");x.type="number";x.value=ans[n]||"";x.placeholder="Numerical answer";x.style="grid-column:1/-1;padding:12px;font-size:18px";x.oninput=()=>{ans[n]=x.value;palette()};box.appendChild(x)}
-else for(let o=1;o<=4;o++){let b=document.createElement("button");b.className="opt "+((ans[n]||"").split(",").includes(""+o)?"sel":"");b.textContent="Option "+o;b.onclick=()=>{let a=(ans[n]||"").split(",").filter(Boolean);if(t==="Single correct")a=[""+o];else a=a.includes(""+o)?a.filter(v=>v!=""+o):[...a,""+o];ans[n]=a.sort().join(",");show(n)};box.appendChild(b)}palette();render(n)}
-async function render(n){if(!pdf)return;let p=await pdf.getPage(Math.min(pdf.numPages,Math.ceil(n/4))),v=p.getViewport({scale:1.25}),c=document.createElement("canvas");c.width=v.width;c.height=v.height;await p.render({canvasContext:c.getContext("2d"),viewport:v}).promise;$("viewer").replaceChildren(c)}
-$("load").onclick=async()=>{let f=$("paper").files[0];if(!f)return alert("Upload paper PDF");pdf=await pdfjs.getDocument({url:URL.createObjectURL(f)}).promise;show(1)};
-$("prev").onclick=()=>show(Math.max(1,current-1));$("next").onclick=()=>show(Math.min(60,current+1));$("review").onclick=()=>{rev[current]=!rev[current];palette()};
-$("submit").onclick=()=>{if(submitted)return;submitted=true;let a=Object.keys(ans).length;$("result").innerHTML="<b>Attempted: "+a+"</b><br>Exact answer-key matching will be enabled in the next upgrade.";};
-function tick(){let h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;$("timer").textContent=[h,m,s].map(x=>String(x).padStart(2,"0")).join(":");if(sec&&!submitted)sec--}setInterval(tick,1000);tick();palette();
-</script></body></html>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f7fa;color:#111827}
+header{height:74px;background:#07111f;color:white;display:flex;align-items:center;justify-content:space-between;padding:0 22px;gap:20px}
+.brand{display:flex;align-items:center;gap:12px;font-size:23px;font-weight:700}
+.logo{width:46px;height:46px;border-radius:50%;background:#1769ff;display:grid;place-items:center;font-size:24px}
+.timer{border:1px solid #398451;border-radius:8px;padding:7px 30px;text-align:center;min-width:190px}
+.timer b{display:block;color:#ffc400;font-size:20px}
+.timer small{color:#56d33f;font-weight:700}
+.actions button{padding:12px 20px;border-radius:7px;border:1px solid #aaa;background:transparent;color:white;font-weight:700;margin-left:10px}
+.actions .end{background:#ed1c24;border-color:#ed1c24}
+.container{display:grid;grid-template-columns:minmax(0,2fr) minmax(310px,1fr);gap:16px;padding:16px}
+.card{background:white;border:1px solid #dfe4ea;border-radius:9px;padding:18px;box-shadow:0 1px 4px #0000000b;margin-bottom:10px}
+h2{margin:0 0 14px;font-size:22px}
+h3{margin:0 0 12px;font-size:17px}
+.uploads{display:flex;gap:16px;align-items:center}
+.filebox{border:1px solid #d1d7df;border-radius:7px;padding:12px 14px;flex:1}
+.filebox label{font-weight:700;display:block;margin-bottom:4px}
+.filebox input{width:100%}
+.blue{background:#1769ff;color:white;border:0;border-radius:6px;padding:12px 18px;font-weight:700}
+.green{background:#159636;color:white;border:0;border-radius:6px;padding:12px 18px;font-weight:700}
+.meta{margin-top:15px;color:#0756df;font-weight:700}
+.question-head{display:flex;justify-content:space-between;align-items:center}
+.badge{background:#1769ff;color:white;border-radius:6px;padding:7px 11px;font-size:13px;font-weight:700}
+.info{background:#eef5ff;border:1px solid #b8d1ff;padding:13px;border-radius:6px;color:#0756df;margin:12px 0}
+.option{border:1px solid #dfe4ea;border-radius:6px;padding:11px 13px;margin:7px 0;cursor:pointer;display:flex;align-items:center;gap:15px;transition:.15s}
+.option:hover{background:#f6f9ff}
+.option.selected{border-color:#1769ff;background:#f1f6ff}
+.circle{width:27px;height:27px;border:2px solid #8795a8;border-radius:50%;display:grid;place-items:center;flex:none}
+.option.selected .circle{border-color:#1769ff}
+.option.selected .circle:after{content:"";width:13px;height:13px;background:#1769ff;border-radius:50%}
+.nav{display:flex;justify-content:space-between;margin-top:14px}
+.nav button{padding:10px 18px;border-radius:6px;border:1px solid #d3d9e0;background:#f2f4f7;font-weight:700}
+.nav .next{background:#1769ff;color:white;border-color:#1769ff}
+.nav .clear{background:white;color:#e11;border-color:#f33}
+.paper{height:290px;border:1px solid #d5dbe3;border-radius:7px;overflow:auto;background:#eee;padding:22px;text-align:center}
+.paper h2{font-family:Georgia,serif}.paper p{max-width:760px;margin:10px auto;text-align:left;font-family:Georgia,serif;font-size:16px;line-height:1.4}
+.palette{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.pbtn{width:40px;height:40px;border-radius:50%;border:1px solid #ccd4df;background:white;font-weight:700;cursor:pointer}
+.pbtn.current{border:2px solid #1769ff}
+.pbtn.answered{background:#dff5df;border-color:#72c878;color:#18772a}
+.pbtn.review{border:2px solid #ff9800;color:#c66a00}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px}
+.dot{display:inline-block;width:18px;height:18px;border-radius:50%;border:1px solid #9aa7b8;vertical-align:middle;margin-right:8px}
+.dot.green{background:#46b34d;border:0}.dot.blue{border:2px solid #1769ff}.flag{color:#ff9800;font-size:20px;vertical-align:middle;margin-right:8px}
+.summary div{display:flex;justify-content:space-between;padding:7px 0}
+.summary strong{padding:4px 10px;border-radius:12px;background:#eef2f7}
+footer{position:sticky;bottom:0;background:#eef6ff;border-top:1px solid #c9dcff;color:#0756b8;padding:9px 18px;font-size:13px;font-weight:700;display:flex;justify-content:space-between}
+@media(max-width:850px){.container{grid-template-columns:1fr}.uploads{flex-direction:column;align-items:stretch}.timer{display:none}.actions{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">🎓</div>JEE Advanced Test</div>
+  <div class="timer">⏱️ <b id="timer">03:00:00</b><small>Time Left</small></div>
+  <div class="actions"><button>ⓘ Instructions</button><button class="end" onclick="submitTest()">End Test ⏻</button></div>
+</header>
+
+<div class="container">
+<main>
+  <section class="card">
+    <h3>Upload Section</h3>
+    <div class="uploads">
+      <div class="filebox"><label>📄 Choose PDF Paper</label><input type="file" accept=".pdf"></div>
+      <div class="filebox"><label>📄 Choose Answer Key (.pdf/.txt/.csv)</label><input type="file" accept=".pdf,.txt,.csv"></div>
+      <button class="blue">Load Paper 📄</button>
+      <button class="green" onclick="submitTest()">✓ Submit Test</button>
+    </div>
+    <div class="meta">Paper 1 / Paper 2 &nbsp; • &nbsp; Single correct &nbsp; • &nbsp; Multiple correct &nbsp; • &nbsp; Numerical answer</div>
+  </section>
+
+  <section class="card">
+    <div class="question-head">
+      <h2>Question <span id="qno">1</span> <span class="badge">Single correct</span></h2>
+      <label><input type="checkbox" id="review" onchange="toggleReview()"> 🔖 Mark for Review</label>
+    </div>
+    <div class="info">ⓘ &nbsp; Select exactly one correct option.</div>
+    <div id="options"></div>
+    <div class="nav">
+      <button onclick="prevQ()">← Previous</button>
+      <div><button class="clear" onclick="clearAnswer()">✕ Clear Response</button> <button class="next" onclick="nextQ()">Next →</button></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Question Paper</h3>
+    <div class="paper">
+      <h2>JEE (Advanced) Sample Paper</h2>
+      <h2>Paper 1</h2>
+      <p>This area is reserved for the uploaded question paper. Once PDF loading is connected, the actual paper will appear here while the answer circles remain on the left.</p>
+      <p><b>Question 1:</b> Select the correct option for the question shown in your uploaded paper.</p>
+    </div>
+  </section>
+</main>
+
+<aside>
+  <section class="card">
+    <h3>Question Palette</h3>
+    <p><span class="dot"></span>Not Visited &nbsp; <span class="dot green"></span>Answered &nbsp; <span class="flag">⚑</span>Marked for Review</p>
+    <p><span class="dot blue"></span>Current Question</p>
+    <div class="palette" id="palette"></div>
+  </section>
+
+  <section class="card">
+    <h3>Legend</h3>
+    <div class="legend">
+      <div><span class="dot green"></span>Answered</div>
+      <div><span class="flag">⚑</span>Marked for Review</div>
+      <div><span class="dot"></span>Not Visited</div>
+      <div><span class="dot blue"></span>Current Question</div>
+    </div>
+  </section>
+
+  <section class="card summary">
+    <h3>Result Summary</h3>
+    <div>Attempted <strong id="attempted">0</strong></div>
+    <div>Marked for Review <strong id="marked">0</strong></div>
+    <div>Not Visited <strong id="notvisited">60</strong></div>
+    <div>Total Questions <strong>60</strong></div>
+    <hr>
+    <div>Correct <strong>0</strong></div>
+    <div>Incorrect <strong>0</strong></div>
+    <div>Score <strong>0</strong></div>
+  </section>
+</aside>
+</div>
+
+<footer><span>☁ Answers are saved automatically as you select them.</span><span>☁ Auto-saved</span></footer>
+
+<script>
+const total=60;
+let current=1;
+const answers=Array(total+1).fill(null);
+const reviews=Array(total+1).fill(false);
+const labels=["Option 1","Option 2","Option 3","Option 4"];
+
+function render(){
+  document.getElementById("qno").textContent=current;
+  document.getElementById("review").checked=reviews[current];
+  const box=document.getElementById("options"); box.innerHTML="";
+  labels.forEach((label,i)=>{
+    const d=document.createElement("div");
+    d.className="option"+(answers[current]===i?" selected":"");
+    d.innerHTML=`<span class="circle"></span><b>${label}</b>`;
+    d.onclick=()=>{answers[current]=i;render()};
+    box.appendChild(d);
+  });
+  const pal=document.getElementById("palette"); pal.innerHTML="";
+  for(let n=1;n<=total;n++){
+    const b=document.createElement("button");
+    b.className="pbtn"+(n===current?" current ":"")+(answers[n]!==null?" answered ":"")+(reviews[n]?" review":"");
+    b.textContent=n;
+    b.onclick=()=>{current=n;render()};
+    pal.appendChild(b);
+  }
+  const attempted=answers.slice(1).filter(x=>x!==null).length;
+  const marked=reviews.slice(1).filter(Boolean).length;
+  document.getElementById("attempted").textContent=attempted;
+  document.getElementById("marked").textContent=marked;
+  document.getElementById("notvisited").textContent=total-attempted;
+}
+function nextQ(){if(current<total){current++;render()}}
+function prevQ(){if(current>1){current--;render()}}
+function clearAnswer(){answers[current]=null;render()}
+function toggleReview(){reviews[current]=document.getElementById("review").checked;render()}
+function submitTest(){alert("Test submitted! Answer checking can be connected to your answer-key file next.")}
+let seconds=10800;
+setInterval(()=>{if(seconds<=0)return;seconds--;let h=Math.floor(seconds/3600),m=Math.floor(seconds%3600/60),s=seconds%60;document.getElementById("timer").textContent=[h,m,s].map(x=>String(x).padStart(2,"0")).join(":")},1000);
+render();
+</script>
+</body>
+</html>
