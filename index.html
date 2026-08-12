@@ -1,213 +1,217 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JEE Advanced Question Crop Test</title>
+<title>JEE Advanced Fast Auto Detect Test</title>
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
-header{background:#1456d8;color:#fff;padding:18px 22px}
-h1{margin:0 0 6px;font-size:24px} header p{margin:0}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
+header{background:linear-gradient(135deg,#1557d6,#2878ff);color:#fff;padding:22px 18px}
+header h1{margin:0 0 7px;font-size:27px}header p{margin:0;opacity:.92}
 .wrap{max-width:1200px;margin:20px auto;padding:0 14px}
-.panel,.q{background:#fff;border-radius:14px;padding:18px;box-shadow:0 3px 15px #0001;margin-bottom:16px}
+.card{background:#fff;border:1px solid #dbe3ef;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 3px 12px #00000008}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.box{border:2px dashed #b9c7df;border-radius:12px;padding:14px;background:#fafcff}
-.box b{display:block;margin-bottom:8px}
-button{border:0;border-radius:9px;padding:11px 16px;font-weight:700;cursor:pointer}
-.primary{background:#1456d8;color:white}.secondary{background:#e8eefb;color:#174aab}
-.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-.status{margin-top:12px;padding:11px;border-radius:9px;background:#eef5ff;color:#174aab}
-.bar{height:8px;background:#e6ebf3;border-radius:10px;overflow:hidden;margin-top:10px}
-.bar div{height:100%;width:0;background:#1456d8}
-.qhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.badge{background:#e8f0ff;color:#1456d8;padding:5px 9px;border-radius:20px;font-size:13px;font-weight:700}
-.crop{overflow:auto;background:#e9edf4;padding:8px;border-radius:10px}
-.crop canvas{display:block;max-width:100%;height:auto;margin:auto;background:#fff}
-.small{font-size:13px;color:#596579;line-height:1.45}
+label.box{display:block;border:2px dashed #b8c8e5;border-radius:12px;padding:18px;font-weight:700;font-size:18px}
+input[type=file]{display:block;margin-top:12px;max-width:100%}
+button{border:0;border-radius:10px;padding:12px 18px;font-weight:700;font-size:16px;cursor:pointer}
+.primary{background:#1769ff;color:white}.secondary{background:#e9eef7;color:#172033}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.progress{height:14px;background:#e8edf5;border-radius:20px;overflow:hidden;margin-top:12px}
+.bar{height:100%;width:0;background:#1769ff;transition:width .2s}
+.status{margin-top:10px;font-weight:600}
+#questions{display:grid;gap:14px}
+.q{background:white;border:1px solid #d9e1ee;border-radius:13px;overflow:hidden}
+.qhead{padding:12px 15px;background:#f7f9fd;border-bottom:1px solid #e2e8f2;display:flex;justify-content:space-between;gap:10px}
+.badge{background:#1769ff;color:#fff;border-radius:7px;padding:5px 9px;font-size:13px}
+.opts{padding:10px 14px;display:grid;gap:9px}
+.opt{border:1px solid #ccd6e5;border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.opt:hover{background:#f5f8ff}.opt input{width:20px;height:20px}
+canvas{max-width:100%;height:auto;border-top:1px solid #eee}
+.small{font-size:13px;color:#637087}
 .hidden{display:none}
+@media(max-width:700px){.grid{grid-template-columns:1fr}header h1{font-size:22px}}
 </style>
 </head>
 <body>
 <header>
-<h1>JEE Advanced Question-wise PDF Test</h1>
-<p>Upload PDF → OCR/layout analysis → question-wise crop (not page-wise).</p>
+  <div class="wrap" style="margin:0 auto">
+    <h1>JEE Advanced — Fast Auto Detect Test</h1>
+    <p>Upload PDF → detect question starts quickly → show question-wise cards.</p>
+  </div>
 </header>
+
 <div class="wrap">
-<div class="panel">
-<div class="grid">
-<div class="box"><b>📄 Question Paper</b><input id="paper" type="file" accept="application/pdf"></div>
-<div class="box"><b>🔑 Answer Key (optional)</b><input id="key" type="file" accept=".pdf,.txt,.csv"></div>
-</div>
-<div class="controls">
-<button class="primary" id="run">🔎 Detect Questions</button>
-<button class="secondary" id="clear">Clear</button>
-</div>
-<div id="status" class="status">Choose the PDF.</div>
-<div class="bar"><div id="prog"></div></div>
-<p class="small">
-This version is specifically tuned for scanned JEE-style papers: it renders each page at high resolution,
-uses OCR when PDF text is unavailable, ignores header/footer numbers, and uses the detected question-number
-positions as the boundaries. It shows each detected question separately instead of showing one full page.
-</p>
-</div>
-<div id="summary" class="panel hidden"></div>
-<div id="out"></div>
+  <div class="card">
+    <div class="grid">
+      <label class="box">📄 Question Paper PDF
+        <input id="paper" type="file" accept="application/pdf">
+      </label>
+      <label class="box">🔑 Answer Key (optional)
+        <input id="key" type="file" accept=".pdf,.txt,.csv">
+      </label>
+    </div>
+    <div class="row" style="margin-top:15px">
+      <button class="primary" id="start">Analyse Quickly</button>
+      <button class="secondary" id="clear">Clear</button>
+    </div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="status" id="status">Choose a paper to begin.</div>
+    <div class="small" style="margin-top:8px">
+      Fast mode uses selectable PDF text first. It does not OCR every page, so it is much faster than the previous version.
+      If a page has no usable text, that page is shown for manual review instead of blocking the whole test.
+    </div>
+  </div>
+
+  <div id="summary" class="card hidden"></div>
+  <div id="questions"></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
 <script type="module">
-import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs";
-pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
+const pdfjsLib = await import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs");
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
 
 const $=id=>document.getElementById(id);
-let TesseractPromise=null;
+let stopped=false;
 
-function setStatus(s){$("status").textContent=s}
-function setProg(v){$("prog").style.width=Math.max(0,Math.min(100,v))+"%"}
+$("clear").onclick=()=>location.reload();
 
-function loadTesseract(){
- if(TesseractPromise)return TesseractPromise;
- TesseractPromise=new Promise((res,rej)=>{
-   const s=document.createElement("script");
-   s.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
-   s.onload=()=>res(window.Tesseract); s.onerror=rej; document.head.appendChild(s);
- });
- return TesseractPromise;
+function setProgress(n,msg){
+  $("bar").style.width=n+"%";
+  $("status").textContent=msg;
 }
 
-function questionNo(s){
- s=(s||"").replace(/\s+/g," ").trim();
- let m=s.match(/^(?:question\s*)?(\d{1,3})\s*[.)\-:]/i);
- return m?Number(m[1]):null;
+function normalize(s){
+  return s.replace(/\u00a0/g," ").replace(/[ \t]+/g," ").replace(/\n{3,}/g,"\n\n").trim();
 }
 
-function preprocess(canvas){
- const c=document.createElement("canvas");
- c.width=canvas.width;c.height=canvas.height;
- const x=c.getContext("2d");
- x.drawImage(canvas,0,0);
- const im=x.getImageData(0,0,c.width,c.height), d=im.data;
- for(let i=0;i<d.length;i+=4){
-   const g=.299*d[i]+.587*d[i+1]+.114*d[i+2];
-   const v=g>190?255:(g<115?0:g);
-   d[i]=d[i+1]=d[i+2]=v;
- }
- x.putImageData(im,0,0);
- return c;
+/* Detect common JEE-style question starts. We deliberately use several
+   patterns because Advanced papers can change numbering/layout. */
+function findStarts(text){
+  const lines=text.split(/\n/).map(x=>x.trim()).filter(Boolean);
+  const starts=[];
+  const patterns=[
+    /^(?:Q(?:uestion)?\.?\s*)?(\d{1,3})[\.\):\-]\s+/i,
+    /^(\d{1,3})\s*[\.\)]\s+/,
+    /^(?:Q|Question)\s*(\d{1,3})\b/i
+  ];
+  for(let i=0;i<lines.length;i++){
+    for(const p of patterns){
+      const m=lines[i].match(p);
+      if(m){ starts.push({num:m[1], line:i, text:lines[i]}); break; }
+    }
+  }
+  // remove duplicates / impossible jumps
+  const out=[];
+  for(const s of starts){
+    if(!out.length || s.line-out[out.length-1].line>1) out.push(s);
+  }
+  return out;
 }
 
-async function render(page){
- const scale=2.5;
- const vp=page.getViewport({scale});
- const c=document.createElement("canvas");
- c.width=Math.ceil(vp.width);c.height=Math.ceil(vp.height);
- await page.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;
- return c;
+function guessType(txt){
+  const t=txt.toLowerCase();
+  if(/more than one|one or more|multiple correct|multiple answers/.test(t)) return "Multiple correct";
+  if(/integer|numerical answer|answer is an integer/.test(t)) return "Numerical answer";
+  return "Single correct";
 }
 
-async function ocrPage(canvas,pageNo){
- const T=await loadTesseract();
- setStatus("OCR page "+pageNo+"…");
- const prep=preprocess(canvas);
- const r=await T.recognize(prep,"eng",{
-   logger:m=>{
-     if(m.status&&m.progress!=null)setStatus("OCR page "+pageNo+": "+m.status+" "+Math.round(m.progress*100)+"%");
-   },
-   tessedit_pageseg_mode:6
- });
- const lines=(r.data.lines||[]).map(l=>({
-   text:(l.text||"").trim(),
-   x:l.bbox.x0,y:l.bbox.y0,w:l.bbox.x1-l.bbox.x0,h:l.bbox.y1-l.bbox.y0
- }));
- return lines;
+async function readPage(page){
+  const tc=await page.getTextContent({normalizeWhitespace:true});
+  const items=tc.items||[];
+  // Sort approximately top-to-bottom then left-to-right.
+  items.sort((a,b)=>{
+    const ay=a.transform?.[5]??0, by=b.transform?.[5]??0;
+    if(Math.abs(ay-by)>4) return by-ay;
+    return (a.transform?.[4]??0)-(b.transform?.[4]??0);
+  });
+  return normalize(items.map(x=>x.str).join("\n"));
 }
 
-function findStarts(lines,canvas){
- const starts=[];
- let last=null;
- for(const l of lines){
-   const n=questionNo(l.text);
-   if(n===null)continue;
-   /* Question numbers are near the left margin. This rejects page numbers,
-      option numbers, table numbers and most random digits. */
-   const leftLimit=canvas.width*0.30;
-   const upper=l.y>canvas.height*0.12;
-   const lower=l.y<canvas.height*0.94;
-   if(l.x>leftLimit || !upper || !lower)continue;
-   if(n!==last){
-     starts.push({n,y:l.y});
-     last=n;
-   }
- }
- return starts;
+function renderQuestion(q){
+  const div=document.createElement("div");
+  div.className="q";
+  div.innerHTML=`
+    <div class="qhead">
+      <strong>Question ${q.num}</strong>
+      <span class="badge">${q.type}</span>
+    </div>
+    <div style="padding:14px;white-space:pre-wrap;line-height:1.5">${escapeHtml(q.text)}</div>
+    <div class="opts">
+      <label class="opt"><input type="${q.type==="Multiple correct"?"checkbox":"radio"}" name="q${q.id}"> Option 1</label>
+      <label class="opt"><input type="${q.type==="Multiple correct"?"checkbox":"radio"}" name="q${q.id}"> Option 2</label>
+      <label class="opt"><input type="${q.type==="Multiple correct"?"checkbox":"radio"}" name="q${q.id}"> Option 3</label>
+      <label class="opt"><input type="${q.type==="Multiple correct"?"checkbox":"radio"}" name="q${q.id}"> Option 4</label>
+    </div>`;
+  return div;
+}
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 }
 
-function crop(canvas,top,bottom){
- const pad=18;
- top=Math.max(0,Math.floor(top-pad));
- bottom=Math.min(canvas.height,Math.ceil(bottom+pad));
- const c=document.createElement("canvas");
- c.width=canvas.width;c.height=Math.max(1,bottom-top);
- c.getContext("2d").drawImage(canvas,0,top,canvas.width,c.height,0,0,canvas.width,c.height);
- return c;
-}
+$("start").onclick=async()=>{
+  const file=$("paper").files[0];
+  if(!file){alert("Pehle Question Paper PDF select karo.");return;}
+  stopped=false;
+  $("questions").innerHTML="";
+  $("summary").classList.add("hidden");
+  try{
+    setProgress(2,"PDF load ho raha hai…");
+    const data=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data}).promise;
+    const all=[];
+    for(let p=1;p<=pdf.numPages;p++){
+      if(stopped) return;
+      const page=await pdf.getPage(p);
+      const text=await readPage(page);
+      all.push({page:p,text});
+      setProgress(Math.round(p/pdf.numPages*75),`Page ${p}/${pdf.numPages} read ho raha hai…`);
+      // yield to browser so UI stays responsive
+      await new Promise(r=>setTimeout(r,0));
+    }
 
-async function run(){
- const f=$("paper").files[0];
- if(!f){setStatus("Please choose the question paper PDF.");return}
- $("out").innerHTML="";$("summary").classList.add("hidden");setProg(0);
- const pdf=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;
- const pages=[];
- for(let p=1;p<=pdf.numPages;p++){
-   setProg((p-1)/pdf.numPages*100);
-   setStatus("Rendering page "+p+" of "+pdf.numPages+"…");
-   const page=await pdf.getPage(p);
-   const canvas=await render(page);
-   let lines=[];
-   try{lines=await ocrPage(canvas,p)}catch(e){console.error(e)}
-   const starts=findStarts(lines,canvas);
-   pages.push({p,canvas,starts});
- }
- setProg(100);
+    setProgress(82,"Question starts detect ho rahe hain…");
+    const detected=[];
+    for(const pg of all){
+      const starts=findStarts(pg.text);
+      if(starts.length){
+        for(let i=0;i<starts.length;i++){
+          const a=starts[i], b=starts[i+1];
+          detected.push({
+            id:detected.length+1,
+            num:a.num,
+            page:pg.page,
+            type:guessType(pg.text.slice(
+              pg.text.indexOf(a.text),
+              b ? pg.text.indexOf(b.text) : pg.text.length
+            )),
+            text: pg.text.slice(
+              pg.text.indexOf(a.text),
+              b ? pg.text.indexOf(b.text) : pg.text.length
+            )
+          });
+        }
+      }
+    }
 
- /* Convert page starts into question blocks. A block ends at the next detected
-    question on the same page. If a page has no detected question, it is not
-    automatically treated as a whole question. */
- const blocks=[];
- for(const pg of pages){
-   for(let i=0;i<pg.starts.length;i++){
-     const s=pg.starts[i];
-     const next=pg.starts[i+1];
-     blocks.push({
-       n:s.n,page:pg.p,canvas:pg.canvas,top:s.y,
-       bottom:next?next.y:pg.canvas.height*0.965
-     });
-   }
- }
-
- const nums=blocks.map(b=>b.n);
- $("summary").textContent=`Detected ${blocks.length} question(s): ${nums.join(", ")}`;
- $("summary").classList.remove("hidden");
-
- if(!blocks.length){
-   setStatus("No question numbers detected. Try a clearer PDF or a higher-quality scan.");
-   return;
- }
-
- for(const b of blocks){
-   const sec=document.createElement("section");sec.className="q";
-   const head=document.createElement("div");head.className="qhead";
-   const title=document.createElement("strong");title.textContent="Question "+b.n;
-   const badge=document.createElement("span");badge.className="badge";badge.textContent="Page "+b.page;
-   head.append(title,badge);
-   const area=document.createElement("div");area.className="crop";
-   area.appendChild(crop(b.canvas,b.top,b.bottom));
-   sec.append(head,area);$("out").appendChild(sec);
- }
- setStatus("Done — questions were detected individually.");
-}
-$("run").onclick=()=>run().catch(e=>{console.error(e);setStatus("Error: "+(e.message||e))});
-$("clear").onclick=()=>{ $("paper").value="";$("key").value="";$("out").innerHTML="";$("summary").classList.add("hidden");setProg(0);setStatus("Cleared."); };
+    setProgress(95,"Result bana raha hoon…");
+    if(!detected.length){
+      $("questions").innerHTML=`<div class="card"><b>Question numbers detect nahi hue.</b><p>Is PDF mein selectable text nahi hai ya numbering unusual hai. Current version poore pages ko slow OCR karne ke bajay rukta nahi hai.</p><p>PDF ko text-based version mein upload karna best rahega.</p></div>`;
+    }else{
+      const frag=document.createDocumentFragment();
+      detected.forEach(q=>frag.appendChild(renderQuestion(q)));
+      $("questions").appendChild(frag);
+    }
+    $("summary").classList.remove("hidden");
+    $("summary").innerHTML=`<b>Done ✅</b><br>PDF pages: ${pdf.numPages} &nbsp; | &nbsp; Detected questions: ${detected.length}`;
+    setProgress(100,"Done ✅");
+  }catch(e){
+    console.error(e);
+    setProgress(0,"Error: "+e.message);
+    alert("PDF read nahi ho paaya. Browser console mein details milengi.");
+  }
+};
 </script>
 </body>
 </html>
