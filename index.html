@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JEE Advanced Test</title>
+<style>
+body{margin:0;font-family:Arial;background:#f3f4f6;color:#111827}header{background:#111827;color:#fff;padding:14px 20px;display:flex;justify-content:space-between}.timer{font-size:20px;font-weight:bold}.wrap{max-width:1400px;margin:14px auto;padding:0 14px;display:grid;grid-template-columns:1fr 300px;gap:14px}.card{background:#fff;padding:14px;border-radius:10px;margin-bottom:14px;box-shadow:0 2px 8px #0001}.btn{padding:9px 13px;border:0;border-radius:7px;background:#2563eb;color:#fff;cursor:pointer;margin:3px}.btn.gray{background:#6b7280}.btn.green{background:#059669}.qnav{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.qbtn{padding:8px;border:1px solid #ddd;border-radius:6px}.done{background:#bbf7d0}.review{outline:3px solid #fbbf24}.current{border:3px solid #2563eb}.options{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.opt{padding:12px;border:2px solid #ddd;background:#fff;border-radius:8px}.sel{border-color:#2563eb;background:#dbeafe}#viewer{height:60vh;overflow:auto;background:#eee;text-align:center}canvas{max-width:100%;background:#fff}.hidden{display:none}@media(max-width:800px){.wrap{grid-template-columns:1fr}.options{grid-template-columns:repeat(2,1fr)}}
+</style></head><body>
+<header><b>JEE Advanced Test</b><span id="timer">03:00:00</span></header>
+<div class="wrap"><main>
+<div class="card"><input id="paper" type="file" accept=".pdf"><input id="key" type="file" accept=".pdf,.txt,.csv"><button class="btn" id="load">Load Paper</button><button class="btn green" id="submit">Submit</button><p>Paper 1 / Paper 2 • Single correct • Multiple correct • Numerical answer</p></div>
+<div class="card hidden" id="panel"><b id="title">Question 1</b><span id="type"></span><div id="options" class="options"></div><button class="btn gray" id="prev">Previous</button><button class="btn gray" id="review">Mark for review</button><button class="btn" id="next">Next</button></div>
+<div class="card"><div id="viewer"></div></div></main>
+<aside><div class="card"><b>Question Palette</b><div id="palette" class="qnav"></div></div><div class="card"><b>Result</b><div id="result">Not submitted</div></div></aside></div>
+<script type="module">
+import * as pdfjs from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs";
+pdfjs.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
+let pdf=null,current=1,ans={},rev={},submitted=false,sec=10800;
+const $=x=>document.getElementById(x);
+function palette(){paletteEl.innerHTML="";for(let i=1;i<=60;i++){let b=document.createElement("button");b.className="qbtn "+(ans[i]?"done ":"")+(rev[i]?"review ":"")+(i==current?"current":"");b.textContent=i;b.onclick=()=>show(i);paletteEl.appendChild(b)}}
+const paletteEl=$("palette");
+function show(n){current=n;$("panel").classList.remove("hidden");$("title").textContent="Question "+n;let t=n%3==0?"Multiple correct":n%3==1?"Single correct":"Numerical answer";$("type").textContent=" • "+t;let box=$("options");box.innerHTML="";
+if(t==="Numerical answer"){let x=document.createElement("input");x.type="number";x.value=ans[n]||"";x.placeholder="Numerical answer";x.style="grid-column:1/-1;padding:12px;font-size:18px";x.oninput=()=>{ans[n]=x.value;palette()};box.appendChild(x)}
+else for(let o=1;o<=4;o++){let b=document.createElement("button");b.className="opt "+((ans[n]||"").split(",").includes(""+o)?"sel":"");b.textContent="Option "+o;b.onclick=()=>{let a=(ans[n]||"").split(",").filter(Boolean);if(t==="Single correct")a=[""+o];else a=a.includes(""+o)?a.filter(v=>v!=""+o):[...a,""+o];ans[n]=a.sort().join(",");show(n)};box.appendChild(b)}palette();render(n)}
+async function render(n){if(!pdf)return;let p=await pdf.getPage(Math.min(pdf.numPages,Math.ceil(n/4))),v=p.getViewport({scale:1.25}),c=document.createElement("canvas");c.width=v.width;c.height=v.height;await p.render({canvasContext:c.getContext("2d"),viewport:v}).promise;$("viewer").replaceChildren(c)}
+$("load").onclick=async()=>{let f=$("paper").files[0];if(!f)return alert("Upload paper PDF");pdf=await pdfjs.getDocument({url:URL.createObjectURL(f)}).promise;show(1)};
+$("prev").onclick=()=>show(Math.max(1,current-1));$("next").onclick=()=>show(Math.min(60,current+1));$("review").onclick=()=>{rev[current]=!rev[current];palette()};
+$("submit").onclick=()=>{if(submitted)return;submitted=true;let a=Object.keys(ans).length;$("result").innerHTML="<b>Attempted: "+a+"</b><br>Exact answer-key matching will be enabled in the next upgrade.";};
+function tick(){let h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;$("timer").textContent=[h,m,s].map(x=>String(x).padStart(2,"0")).join(":");if(sec&&!submitted)sec--}setInterval(tick,1000);tick();palette();
+</script></body></html>
