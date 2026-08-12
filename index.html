@@ -3,199 +3,262 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JEE Advanced PDF Test</title>
+<title>JEE Advanced Auto Detect Test</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f6f9;color:#18202a}
-header{height:72px;background:#071322;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
-.logo{display:flex;gap:10px;align-items:center;font-weight:800;font-size:21px}.logo span{background:#1268e8;border-radius:50%;padding:10px}
-.timer{border:1px solid #32854a;border-radius:7px;padding:6px 28px;text-align:center}.timer b{display:block;color:#ffd000;font-size:20px}.timer small{color:#48d36a}
-header button{background:transparent;border:1px solid #aeb6c1;color:#fff;padding:10px 15px;border-radius:6px;font-weight:700}.end{background:#e51c2a!important;border-color:#e51c2a!important}
-.grid{display:grid;grid-template-columns:minmax(0,2fr) 360px;gap:14px;padding:14px}
-.card{background:#fff;border:1px solid #dbe1e8;border-radius:8px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px #0000000b}
-.upload{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end}.field label{display:block;font-weight:700;margin-bottom:6px}.field input{width:100%;padding:10px;border:1px solid #ccd4de;border-radius:6px}
-.btn{border:0;border-radius:6px;padding:11px 16px;font-weight:700;cursor:pointer}.primary{background:#1769ff;color:#fff}.green{background:#138a36;color:#fff}.gray{background:#eef1f5}.danger{background:#fff;border:1px solid #e53935!important;color:#d71920}
-.status{margin-top:10px;color:#0757c9;font-weight:700}.error{color:#c21d2b}.notice{background:#eef6ff;border:1px solid #c6dcff;color:#0757c9;border-radius:6px;padding:11px;margin-top:10px}
-.qtop{display:flex;justify-content:space-between;align-items:center;gap:12px}.badge{background:#1769ff;color:#fff;padding:7px 10px;border-radius:6px;font-size:12px;font-weight:700}
-.option{display:flex;align-items:center;gap:13px;border:1px solid #d9dfe7;border-radius:6px;padding:12px;margin:8px 0;cursor:pointer}.option:hover{background:#f6f9ff}.option.selected{background:#eef5ff;border-color:#1769ff}
-.circle{width:26px;height:26px;border:2px solid #8b98a8;border-radius:50%;display:grid;place-items:center;flex:none}.selected .circle{border-color:#1769ff}.selected .circle:after{content:"";width:12px;height:12px;border-radius:50%;background:#1769ff}
-.numeric{width:220px;padding:11px;border:1px solid #bfc8d4;border-radius:6px;font-size:17px}
-.nav{display:flex;justify-content:space-between;margin-top:15px}.navright{display:flex;gap:8px}
-.pdfbox{background:#e9edf2;border:1px solid #d0d7df;border-radius:6px;padding:8px;min-height:420px;overflow:auto;text-align:center}.pdfbox canvas{max-width:100%;height:auto;background:#fff;box-shadow:0 1px 4px #0002}
-.palette{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.qbtn{height:38px;border-radius:50%;border:1px solid #bfc8d4;background:#fff;font-weight:700;cursor:pointer}.qbtn.current{border:3px solid #1769ff}.qbtn.answered{background:#43b64d;color:#fff;border-color:#43b64d}.qbtn.review{box-shadow:inset 0 0 0 3px #ff9800}.qbtn.answered.review{background:#43b64d}
-.legend{font-size:13px;line-height:2}.dot{display:inline-block;width:16px;height:16px;border-radius:50%;border:1px solid #9ba7b6;vertical-align:middle;margin-right:6px}.dot.green{background:#43b64d;border:0}.dot.blue{border:3px solid #1769ff}.orange{color:#ff9800;font-size:18px}
-.summary div{display:flex;justify-content:space-between;padding:7px 0}.summary b{background:#eef1f5;padding:3px 9px;border-radius:12px}
-footer{position:sticky;bottom:0;background:#edf6ff;border-top:1px solid #c8dcff;padding:8px 15px;color:#0757c9;font-size:13px;font-weight:700;display:flex;justify-content:space-between}
-.hidden{display:none}@media(max-width:900px){.grid{grid-template-columns:1fr}.upload{grid-template-columns:1fr}.timer{display:none}}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
+header{background:#1456d8;color:white;padding:18px 22px}
+header h1{margin:0 0 5px;font-size:25px}
+header p{margin:0;opacity:.9}
+.wrap{max-width:1200px;margin:20px auto;padding:0 14px}
+.panel{background:white;border-radius:14px;padding:18px;box-shadow:0 3px 15px #00000012;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label.box{border:2px dashed #b9c7df;border-radius:12px;padding:15px;display:block;background:#fafcff}
+label.box b{display:block;margin-bottom:9px;font-size:16px}
+input[type=file]{max-width:100%}
+button{border:0;border-radius:9px;padding:11px 16px;font-weight:700;cursor:pointer}
+.primary{background:#1456d8;color:#fff}
+.secondary{background:#e8eefb;color:#174aab}
+.danger{background:#ffe9e9;color:#a71919}
+button:disabled{opacity:.5;cursor:not-allowed}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.status{margin-top:12px;padding:11px;border-radius:9px;background:#eef5ff;color:#174aab}
+.progress{height:8px;background:#e6ebf3;border-radius:10px;overflow:hidden;margin-top:10px}
+.progress>div{height:100%;width:0;background:#1456d8;transition:.2s}
+.summary{display:flex;gap:18px;flex-wrap:wrap;font-weight:700}
+.q{background:white;border-radius:13px;margin:14px 0;padding:14px;box-shadow:0 2px 10px #00000010}
+.qhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.badge{background:#e8f0ff;color:#1456d8;padding:5px 9px;border-radius:20px;font-size:13px;font-weight:700}
+.canvaswrap{overflow:auto;background:#eef1f6;border-radius:10px;padding:8px}
+.canvaswrap canvas{display:block;max-width:100%;height:auto;margin:auto;background:#fff}
+.notice{font-size:13px;color:#596579;line-height:1.45}
+.hidden{display:none}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header>
-<div class="logo"><span>🎓</span>JEE Advanced PDF Test</div>
-<div class="timer">⏱ <b id="clock">03:00:00</b><small>Time Left</small></div>
-<div><button>ⓘ Instructions</button> <button class="end" id="submitTop">End Test ⏻</button></div>
+<h1>JEE Advanced Auto Detect Test</h1>
+<p>Upload a PDF → analyse its layout → detect question starts → crop each question automatically.</p>
 </header>
 
+<div class="wrap">
+<div class="panel">
 <div class="grid">
-<main>
-<section class="card">
-<h3>Upload your paper</h3>
-<div class="upload">
-<div class="field"><label>📄 Question Paper PDF</label><input id="paper" type="file" accept="application/pdf,.pdf"></div>
-<div class="field"><label>🔑 Answer Key (optional)</label><input id="key" type="file" accept=".pdf,.txt,.csv"></div>
-<button class="btn primary" id="load">Load PDF</button>
+<label class="box"><b>📄 Choose Question Paper PDF</b>
+<input id="paper" type="file" accept="application/pdf">
+</label>
+<label class="box"><b>🔑 Choose Answer Key (optional)</b>
+<input id="key" type="file" accept=".pdf,.txt,.csv">
+</label>
 </div>
-<div id="status" class="status">No paper loaded.</div>
-<div class="notice">Question count is detected from the uploaded PDF. No fixed 60-question limit is used. If the PDF has an unusual layout, you can correct the detected count before starting.</div>
-<div id="countFix" class="hidden" style="margin-top:10px">
-Detected <b id="detected">0</b> questions.
-<button class="btn gray" id="minus">−</button>
-<button class="btn gray" id="plus">+</button>
-<button class="btn green" id="start">Start / Reload Test</button>
+<div class="controls">
+<button id="analyse" class="primary">🔎 Analyse & Detect Questions</button>
+<button id="clear" class="secondary">Clear</button>
 </div>
-</section>
-
-<section class="card">
-<div class="qtop"><h2>Question <span id="qno">—</span></h2><span class="badge" id="type">Upload PDF first</span></div>
-<div class="notice" id="instruction">Upload a PDF and click Load PDF.</div>
-<div id="options"></div>
-<div class="nav">
-<button class="btn gray" id="prev">← Previous</button>
-<div class="navright"><button class="btn danger" id="clear">✕ Clear Response</button><button class="btn gray" id="review">🔖 Mark for Review</button><button class="btn primary" id="next">Next →</button></div>
-</div>
-</section>
-
-<section class="card">
-<h3>Question Paper</h3>
-<div id="viewer" class="pdfbox">The uploaded PDF page will appear here.</div>
-</section>
-</main>
-
-<aside>
-<section class="card"><h3>Question Palette (<span id="total">0</span>)</h3><div id="palette" class="palette"></div></section>
-<section class="card legend">
-<b>Legend</b><br>
-<span class="dot green"></span>Answered<br>
-<span class="dot blue"></span>Current<br>
-<span class="orange">⚑</span> Marked for Review<br>
-<span class="dot"></span>Not Visited
-</section>
-<section class="card summary"><h3>Result Summary</h3>
-<div>Attempted <b id="attempted">0</b></div><div>Marked for Review <b id="marked">0</b></div><div>Not Visited <b id="notvisited">0</b></div><div>Total Questions <b id="total2">0</b></div>
-<hr><div>Correct <b id="correct">—</b></div><div>Incorrect <b id="incorrect">—</b></div><div>Score <b id="score">—</b></div>
-</section>
-</aside>
+<div id="status" class="status">Select a PDF to begin.</div>
+<div class="progress"><div id="bar"></div></div>
+<p class="notice">
+The detector first uses PDF text positions. If a page has little/no selectable text, it automatically tries OCR.
+This is designed for JEE-style PDFs and does not require you to manually enter the number of questions.
+</p>
 </div>
 
-<footer><span>☁ Responses are saved in this browser during the test.</span><span id="saveState">Ready</span></footer>
+<div id="summaryPanel" class="panel hidden">
+<div class="summary" id="summary"></div>
+</div>
 
+<div id="questions"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
 <script type="module">
-import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
-pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs";
+pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
 
 const $=id=>document.getElementById(id);
-let pdf=null,total=0,current=1,answers={},reviews={},questionPages=[],questionTypes={},seconds=10800;
-let answerKey=null;
+let pdf=null, cancelled=false;
 
-function setStatus(t,err=false){$("status").textContent=t;$("status").className="status"+(err?" error":"")}
-function detectQuestions(pageTexts){
-  // Detect question numbers like "1.", "2)", "Q. 3", "Question 4".
-  const found=new Set();
-  const pageNums=[];
-  for(let p=0;p<pageTexts.length;p++){
-    const text=pageTexts[p];
-    const nums=[];
-    const re=/(?:^|[\n\r])\s*(?:Q(?:uestion)?\s*)?(\d{1,3})\s*[\.\)]\s+/gim;
-    let m;
-    while((m=re.exec(text))){const n=Number(m[1]);if(n>0&&n<1000){found.add(n);nums.push(n)}}
-    pageNums.push(nums);
+function status(t){$("status").textContent=t}
+function progress(v){$("bar").style.width=Math.max(0,Math.min(100,v))+"%"}
+
+function clean(s){return (s||"").replace(/\\s+/g," ").trim()}
+
+/* JEE PDFs use several numbering styles. We only accept likely line starts,
+   which helps avoid treating option numbers as new questions. */
+function questionNumber(text){
+  const s=clean(text);
+  let m=s.match(/^(?:Q(?:uestion)?\\s*[.:-]?\\s*)?(\\d{1,3})\\s*[.)\\-:]/i);
+  if(!m) m=s.match(/^Q\\s*(\\d{1,3})\\b/i);
+  return m ? Number(m[1]) : null;
+}
+
+function groupLines(items){
+  const rows=[];
+  const tolerance=4;
+  for(const it of items){
+    const str=clean(it.str);
+    if(!str) continue;
+    const tr=it.transform;
+    const x=tr[4], y=tr[5], h=Math.abs(tr[3])||10;
+    let row=rows.find(r=>Math.abs(r.y-y)<tolerance);
+    if(!row){row={y,x,height:h,items:[]};rows.push(row)}
+    row.items.push({str,x});
+    row.x=Math.min(row.x,x);
   }
-  // Prefer a continuous sequence starting at 1. This avoids counting years, phone numbers, etc.
-  const sorted=[...found].sort((a,b)=>a-b);
-  let max=0; for(const n of sorted){if(n===max+1)max=n;else if(n<=max)continue;else break}
-  if(max<1) max=sorted.length?Math.max(...sorted):0;
-  // Map each detected question to the PDF page where it first appears.
-  const map=[]; for(let n=1;n<=max;n++){let p=pageNums.findIndex(a=>a.includes(n));map.push(p<0?0:p)}
-  return {count:max,pages:map};
+  rows.sort((a,b)=>b.y-a.y);
+  for(const r of rows) r.text=r.items.sort((a,b)=>a.x-b.x).map(x=>x.str).join(" ");
+  return rows;
 }
-async function loadPDF(file){
-  const buf=await file.arrayBuffer();
-  pdf=await pdfjsLib.getDocument({data:buf}).promise;
-  const texts=[];
-  for(let p=1;p<=pdf.numPages;p++){
-    const page=await pdf.getPage(p); const tc=await page.getTextContent();
-    texts.push(tc.items.map(x=>x.str).join(" "));
-  }
-  const d=detectQuestions(texts);
-  total=d.count; questionPages=d.pages;
-  if(total===0){total=pdf.numPages;questionPages=Array.from({length:total},(_,i)=>i);setStatus("Could not reliably detect numbered questions; using PDF pages as a fallback.",true)}
-  $("detected").textContent=total;$("total").textContent=total;$("total2").textContent=total;
-  $("countFix").classList.remove("hidden");
-  answers={};reviews={};current=1;
-  setStatus(`Loaded ${pdf.numPages} PDF pages • detected ${total} questions.`);
-  renderPalette();showQuestion(1);
+
+async function renderPage(page, scale=1.55){
+  const viewport=page.getViewport({scale});
+  const c=document.createElement("canvas");
+  c.width=Math.ceil(viewport.width); c.height=Math.ceil(viewport.height);
+  await page.render({canvasContext:c.getContext("2d"),viewport}).promise;
+  return {canvas:c,viewport,scale};
 }
-async function renderPageForQuestion(n){
-  if(!pdf)return;
-  const pageNo=Math.min(pdf.numPages,(questionPages[n-1]??0)+1);
-  const page=await pdf.getPage(pageNo);
-  const vp=page.getViewport({scale:1.35});
-  const c=document.createElement("canvas");c.width=vp.width;c.height=vp.height;
-  await page.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;
-  $("viewer").replaceChildren(c);
-}
-function inferType(n){
-  const text=n%3===0?"Multiple correct":(n%3===1?"Single correct":"Numerical answer");
-  return text;
-}
-function showQuestion(n){
-  if(!total)return;
-  current=Math.max(1,Math.min(total,n));$("qno").textContent=current;
-  const t=questionTypes[current]||inferType(current);$("type").textContent=t;
-  $("instruction").textContent=t==="Single correct"?"Select exactly one correct option.":t==="Multiple correct"?"Select one or more correct options.":"Enter the numerical answer.";
-  const box=$("options");box.innerHTML="";
-  if(t==="Numerical answer"){
-    const inp=document.createElement("input");inp.className="numeric";inp.type="number";inp.placeholder="Enter answer";inp.value=answers[current]??"";
-    inp.oninput=()=>{answers[current]=inp.value;saveState();renderPalette();updateSummary()};box.appendChild(inp);
-  }else{
-    for(let i=1;i<=4;i++){
-      const d=document.createElement("div");const selected=(answers[current]||[]).includes(i);
-      d.className="option"+(selected?" selected":"");
-      d.innerHTML=`<span class="circle"></span><b>Option ${i}</b>`;
-      d.onclick=()=>{
-        if(t==="Single correct") answers[current]=[i];
-        else {const a=answers[current]||[];answers[current]=a.includes(i)?a.filter(x=>x!==i):[...a,i].sort((a,b)=>a-b)}
-        saveState();showQuestion(current);
-      };box.appendChild(d);
+
+async function detectTextStarts(page){
+  const tc=await page.getTextContent({includeMarkedContent:false});
+  const rows=groupLines(tc.items||[]);
+  const starts=[];
+  let lastNum=null;
+  for(const r of rows){
+    const n=questionNumber(r.text);
+    if(n!==null && n!==lastNum){
+      starts.push({n,y:r.y,x:r.x,text:r.text});
+      lastNum=n;
     }
   }
-  $("review").textContent=reviews[current]?"🔖 Unmark Review":"🔖 Mark for Review";
-  renderPalette();updateSummary();renderPageForQuestion(current);
+  return {rows,starts};
 }
-function renderPalette(){
-  const p=$("palette");p.innerHTML="";
-  for(let n=1;n<=total;n++){
-    const b=document.createElement("button");b.className="qbtn";
-    const has=answers[n]!==undefined && answers[n]!==null && String(answers[n])!=="";
-    if(has)b.classList.add("answered");if(reviews[n])b.classList.add("review");if(n===current)b.classList.add("current");
-    b.textContent=n;b.onclick=()=>showQuestion(n);p.appendChild(b);
+
+async function ocrStarts(page, rendered){
+  /* OCR fallback. Loaded only when needed. */
+  status("No usable text found on a page — loading OCR fallback…");
+  if(!window.Tesseract){
+    await new Promise((resolve,reject)=>{
+      const sc=document.createElement("script");
+      sc.src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+      sc.onload=resolve; sc.onerror=reject; document.head.appendChild(sc);
+    });
+  }
+  const result=await Tesseract.recognize(rendered.canvas,"eng",{
+    logger:m=>{ if(m.progress!=null) status("OCR: "+(m.status||"working")+" "+Math.round(m.progress*100)+"%") }
+  });
+  const lines=(result.data.lines||[]).sort((a,b)=>a.bbox.y0-b.bbox.y0);
+  const starts=[];
+  let lastNum=null;
+  for(const line of lines){
+    const n=questionNumber(line.text);
+    if(n!==null && n!==lastNum){
+      starts.push({n,y:line.bbox.y0,ocr:true});
+      lastNum=n;
+    }
+  }
+  return starts;
+}
+
+function cropCanvas(source, y0, y1){
+  const pad=12;
+  y0=Math.max(0,Math.floor(y0-pad));
+  y1=Math.min(source.height,Math.ceil(y1+pad));
+  const out=document.createElement("canvas");
+  out.width=source.width;
+  out.height=Math.max(1,y1-y0);
+  out.getContext("2d").drawImage(source,0,y0,source.width,out.height,0,0,source.width,out.height);
+  return out;
+}
+
+async function analysePDF(){
+  const f=$("paper").files[0];
+  if(!f){status("Please choose the question paper PDF first.");return}
+  cancelled=false;
+  $("questions").innerHTML="";
+  $("summaryPanel").classList.add("hidden");
+  progress(0);
+  status("Opening PDF…");
+  const data=await f.arrayBuffer();
+  pdf=await pdfjsLib.getDocument({data}).promise;
+  const detected=[];
+  let totalStarts=0;
+
+  for(let p=1;p<=pdf.numPages;p++){
+    if(cancelled) return;
+    progress((p-1)/pdf.numPages*100);
+    status(`Analysing page ${p} of ${pdf.numPages}…`);
+    const page=await pdf.getPage(p);
+    const rendered=await renderPage(page);
+    let info=await detectTextStarts(page);
+    let starts=info.starts;
+
+    if(starts.length===0){
+      try{ starts=await ocrStarts(page,rendered); }catch(e){
+        console.warn("OCR failed",e);
+      }
+    }
+
+    /* Map PDF y coordinates to rendered canvas coordinates.
+       PDF.js transform y is from bottom; canvas y is from top. */
+    const pageHeight=rendered.viewport.height;
+    if(starts.length){
+      for(let i=0;i<starts.length;i++){
+        const s=starts[i];
+        const top=s.ocr ? s.y : pageHeight-(s.y*rendered.scale);
+        const next=starts[i+1];
+        const bottom=next
+          ? (next.ocr ? next.y : pageHeight-(next.y*rendered.scale))
+          : pageHeight;
+        detected.push({page:p,n:s.n,canvas:rendered.canvas,top,bottom});
+      }
+    } else {
+      /* If nothing can be detected, keep the page visible as a manual-review block. */
+      detected.push({page:p,n:null,canvas:rendered.canvas,top:0,bottom:pageHeight,undetected:true});
+    }
+  }
+
+  progress(100);
+  renderResults(detected);
+}
+
+function renderResults(items){
+  $("questions").innerHTML="";
+  const good=items.filter(x=>x.n!==null).length;
+  const pages=new Set(items.map(x=>x.page)).size;
+  $("summary").innerHTML=`Detected question blocks: ${good} &nbsp; | &nbsp; Pages: ${pages} &nbsp; | &nbsp; Total blocks: ${items.length}`;
+  $("summaryPanel").classList.remove("hidden");
+
+  let index=0;
+  for(const item of items){
+    index++;
+    const q=document.createElement("section");
+    q.className="q";
+    const head=document.createElement("div");
+    head.className="qhead";
+    const title=document.createElement("strong");
+    title.textContent=item.n===null ? `Page ${item.page} — Manual review` : `Question ${item.n}`;
+    const badge=document.createElement("span");
+    badge.className="badge";
+    badge.textContent=item.undetected ? "Could not auto-detect" : `Page ${item.page}`;
+    head.append(title,badge);
+    const cw=document.createElement("div"); cw.className="canvaswrap";
+    const cropped=cropCanvas(item.canvas,item.top,item.bottom);
+    cw.appendChild(cropped);
+    q.append(head,cw);
+    $("questions").appendChild(q);
   }
 }
-function updateSummary(){
-  const attempted=Object.values(answers).filter(v=>v!==undefined&&v!==null&&String(v)!=="").length;
-  const marked=Object.values(reviews).filter(Boolean).length;
-  $("attempted").textContent=attempted;$("marked").textContent=marked;$("notvisited").textContent=Math.max(0,total-attempted);
-}
-function saveState(){$("saveState").textContent="Auto-saved • "+new Date().toLocaleTimeString()}
-$("load").onclick=async()=>{const f=$("paper").files[0];if(!f)return setStatus("Please choose a PDF first.",true);try{await loadPDF(f)}catch(e){setStatus("Could not read this PDF: "+e.message,true)}};
-$("start").onclick=()=>{current=1;answers={};reviews={};renderPalette();showQuestion(1)};
-$("minus").onclick=()=>{if(total>1){total--; $("detected").textContent=total;$("total").textContent=total;$("total2").textContent=total;showQuestion(Math.min(current,total))}};
-$("plus").onclick=()=>{total++;$("detected").textContent=total;$("total").textContent=total;$("total2").textContent=total;renderPalette();showQuestion(current)};
-$("next").onclick=()=>showQuestion(current+1);$("prev").onclick=()=>showQuestion(current-1);
-$("clear").onclick=()=>{delete answers[current];saveState();showQuestion(current)};
-$("review").onclick=()=>{reviews[current]=!reviews[current];saveState();showQuestion(current)};
-$("submitTop").onclick=()=>{if(confirm("Submit this test?")){alert("Test submitted. Answer-key matching can be connected to your uploaded key.");$("saveState").textContent="Submitted"}};
 
-setInterval(()=>{if(seconds<=0)return;seconds--;const h=Math.floor(seconds/3600),m=Math.floor(seconds%3600/60),s=seconds%60;$("clock").textContent=[h,m,s].map(x=>String(x).padStart(2,"0")).join(":")},1000);
-updateSummary();
+$("analyse").onclick=()=>analysePDF().catch(e=>{
+  console.error(e);
+  status("Could not read this PDF: "+(e.message||e));
+});
+$("clear").onclick=()=>{
+  cancelled=true; pdf=null; $("questions").innerHTML="";
+  $("summaryPanel").classList.add("hidden"); $("paper").value=""; $("key").value="";
+  progress(0); status("Cleared.");
+};
 </script>
-</body></html>
+</body>
+</html>
