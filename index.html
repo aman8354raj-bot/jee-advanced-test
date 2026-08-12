@@ -1,217 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JEE Advanced Fast Auto Detect Test</title>
+<title>JEE Advanced Mock Test</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
-header{background:linear-gradient(135deg,#1557d6,#2878ff);color:#fff;padding:22px 18px}
-header h1{margin:0 0 7px;font-size:27px}header p{margin:0;opacity:.92}
-.wrap{max-width:1200px;margin:20px auto;padding:0 14px}
-.card{background:#fff;border:1px solid #dbe3ef;border-radius:14px;padding:18px;margin-bottom:16px;box-shadow:0 3px 12px #00000008}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-label.box{display:block;border:2px dashed #b8c8e5;border-radius:12px;padding:18px;font-weight:700;font-size:18px}
-input[type=file]{display:block;margin-top:12px;max-width:100%}
-button{border:0;border-radius:10px;padding:12px 18px;font-weight:700;font-size:16px;cursor:pointer}
-.primary{background:#1769ff;color:white}.secondary{background:#e9eef7;color:#172033}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.progress{height:14px;background:#e8edf5;border-radius:20px;overflow:hidden;margin-top:12px}
-.bar{height:100%;width:0;background:#1769ff;transition:width .2s}
-.status{margin-top:10px;font-weight:600}
-#questions{display:grid;gap:14px}
-.q{background:white;border:1px solid #d9e1ee;border-radius:13px;overflow:hidden}
-.qhead{padding:12px 15px;background:#f7f9fd;border-bottom:1px solid #e2e8f2;display:flex;justify-content:space-between;gap:10px}
-.badge{background:#1769ff;color:#fff;border-radius:7px;padding:5px 9px;font-size:13px}
-.opts{padding:10px 14px;display:grid;gap:9px}
-.opt{border:1px solid #ccd6e5;border-radius:10px;padding:12px;display:flex;align-items:center;gap:10px;cursor:pointer}
-.opt:hover{background:#f5f8ff}.opt input{width:20px;height:20px}
-canvas{max-width:100%;height:auto;border-top:1px solid #eee}
-.small{font-size:13px;color:#637087}
-.hidden{display:none}
-@media(max-width:700px){.grid{grid-template-columns:1fr}header h1{font-size:22px}}
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background:#f5f6f8;color:#222}
+button,input{font:inherit}.hidden{display:none!important}
+/* Upload */
+.setup{max-width:1100px;margin:40px auto;padding:22px}.setup h1{margin:0 0 6px}.setup p{color:#555}.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.filebox{background:#fff;border:2px dashed #b7c3d0;border-radius:10px;padding:18px;font-weight:700}.filebox input{display:block;margin-top:12px;max-width:100%}.setup-actions{margin-top:18px;display:flex;gap:10px}.btn{border:1px solid #bbb;border-radius:5px;padding:10px 18px;background:#fff;cursor:pointer}.btn.primary{background:#1769e8;color:#fff;border-color:#1769e8}.btn.green{background:#178a45;color:#fff;border-color:#178a45}.progress{height:8px;background:#ddd;margin-top:18px;border-radius:5px;overflow:hidden}.bar{height:100%;width:0;background:#1769e8}.status{margin-top:9px;color:#444}
+/* Full test UI */
+.test{height:100vh;display:flex;flex-direction:column;overflow:hidden;background:#f4f5f7}
+.header{height:64px;flex:0 0 64px;background:#fff;border-bottom:1px solid #d4d7dc;display:flex;align-items:center;justify-content:space-between;padding:0 18px;box-shadow:0 1px 3px #0001;z-index:5}
+.brand{display:flex;align-items:center;gap:12px;font-size:20px;font-weight:700}.brand-mark{width:38px;height:38px;border-radius:4px;background:#1769e8;color:#fff;display:grid;place-items:center;font-weight:800}.section-name{font-size:15px;color:#555;font-weight:600;border-left:1px solid #ddd;padding-left:16px}
+.timerbox{display:flex;align-items:center;gap:10px;font-weight:700}.timer{background:#222;color:#fff;padding:8px 13px;border-radius:4px;min-width:100px;text-align:center;font-variant-numeric:tabular-nums}.submit-top{background:#e5534b;color:#fff;border:0;border-radius:4px;padding:9px 15px;font-weight:700;cursor:pointer}
+.body{min-height:0;flex:1;display:grid;grid-template-columns:minmax(0,1fr) 285px}
+.main{min-width:0;display:flex;flex-direction:column;min-height:0}.qbar{height:48px;flex:0 0 48px;background:#fff;border-bottom:1px solid #d4d7dc;padding:0 18px;display:flex;align-items:center;justify-content:space-between}.qtitle{font-size:17px;font-weight:700}.qtype{font-size:13px;color:#555}
+.question-scroll{flex:1;min-height:0;overflow:auto;padding:18px 22px 12px;background:#f4f5f7}.question-card{background:#fff;border:1px solid #d8dadd;box-shadow:0 1px 2px #0001;min-height:100%;padding:0}
+.crop-title{padding:12px 16px;border-bottom:1px solid #e2e3e6;font-size:14px;font-weight:700;color:#444}.crop-wrap{padding:12px 16px 6px;text-align:center}.crop-img{display:block;max-width:100%;width:auto;height:auto;max-height:48vh;margin:0 auto;border:1px solid #ddd;object-fit:contain;background:#fff}.crop-fallback{white-space:pre-wrap;text-align:left;font-size:18px;line-height:1.55;padding:18px}
+.options{padding:12px 22px 18px;display:grid;gap:9px}.option{background:#fff;border:1px solid #c9ced6;border-radius:3px;min-height:50px;display:flex;align-items:center;gap:13px;padding:10px 14px;cursor:pointer}.option:hover{background:#f5f9ff}.option.selected{border-color:#1769e8;background:#edf4ff}.radio{width:22px;height:22px;border:2px solid #89929f;border-radius:50%;display:grid;place-items:center;flex:0 0 22px}.radio::after{content:"";width:10px;height:10px;border-radius:50%;background:#1769e8;transform:scale(0)}.option.selected .radio{border-color:#1769e8}.option.selected .radio::after{transform:scale(1)}.check{width:22px;height:22px;border:2px solid #89929f;border-radius:3px;display:grid;place-items:center;flex:0 0 22px}.option.selected .check{border-color:#1769e8;background:#1769e8}.check::after{content:"✓";color:#fff;font-weight:800;font-size:15px}.option:not(.selected) .check::after{display:none}.option-label{font-weight:600}.numinput{width:180px;border:1px solid #aaa;border-radius:3px;padding:8px}
+.bottom{height:66px;flex:0 0 66px;background:#fff;border-top:1px solid #cfd2d7;display:flex;align-items:center;justify-content:space-between;padding:0 18px;gap:10px;z-index:4}.bottom-left,.bottom-right{display:flex;gap:8px}.navbtn{border:1px solid #bfc4cb;background:#fff;border-radius:4px;padding:10px 15px;cursor:pointer;font-weight:700}.navbtn.primary{background:#1769e8;border-color:#1769e8;color:#fff}.navbtn.orange{background:#f4a000;border-color:#df9000;color:#fff}.navbtn:disabled{opacity:.45;cursor:not-allowed}
+/* Palette */
+.palette{background:#fff;border-left:1px solid #cfd2d7;display:flex;flex-direction:column;min-height:0}.profile{padding:14px;border-bottom:1px solid #ddd;display:flex;align-items:center;gap:10px}.avatar{width:40px;height:40px;border-radius:50%;background:#e8eef8;display:grid;place-items:center;font-weight:800;color:#1769e8}.palette-head{padding:12px 14px 5px;font-weight:800}.legend{padding:5px 14px 12px;border-bottom:1px solid #ddd;font-size:12px;color:#555;display:grid;grid-template-columns:1fr 1fr;gap:7px}.legend span{display:flex;align-items:center;gap:5px}.dot{width:18px;height:18px;border-radius:3px;border:1px solid #bbb;display:inline-block}.dot.not{background:#fff}.dot.at{background:#55b878;border-color:#55b878}.dot.review{background:#f7c55b;border-color:#f7c55b}.dot.cur{background:#1769e8;border-color:#1769e8}.nums{padding:13px;overflow:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.num{height:34px;border:1px solid #bfc5cc;border-radius:3px;background:#fff;cursor:pointer;font-weight:700}.num.current{background:#1769e8;color:#fff;border-color:#1769e8}.num.attempted{background:#55b878;color:#fff;border-color:#55b878}.num.review{background:#f7c55b;color:#222;border-color:#e1ae43}.num.attempted.review{background:#f7c55b;color:#222}
+.result{position:fixed;inset:0;background:#f4f5f7;z-index:50;padding:60px 20px}.result-card{max-width:700px;margin:auto;background:#fff;border:1px solid #ddd;padding:30px;border-radius:8px}.result-card h2{margin-top:0}
+@media(max-width:850px){.body{grid-template-columns:1fr}.palette{display:none}.header{height:58px;flex-basis:58px}.section-name{display:none}.question-scroll{padding:10px}.crop-img{max-height:40vh}.bottom{height:auto;min-height:70px;flex-wrap:wrap;padding:8px}.bottom-left,.bottom-right{flex-wrap:wrap}.upload-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header>
-  <div class="wrap" style="margin:0 auto">
-    <h1>JEE Advanced — Fast Auto Detect Test</h1>
-    <p>Upload PDF → detect question starts quickly → show question-wise cards.</p>
-  </div>
-</header>
-
-<div class="wrap">
-  <div class="card">
-    <div class="grid">
-      <label class="box">📄 Question Paper PDF
-        <input id="paper" type="file" accept="application/pdf">
-      </label>
-      <label class="box">🔑 Answer Key (optional)
-        <input id="key" type="file" accept=".pdf,.txt,.csv">
-      </label>
-    </div>
-    <div class="row" style="margin-top:15px">
-      <button class="primary" id="start">Analyse Quickly</button>
-      <button class="secondary" id="clear">Clear</button>
-    </div>
-    <div class="progress"><div class="bar" id="bar"></div></div>
-    <div class="status" id="status">Choose a paper to begin.</div>
-    <div class="small" style="margin-top:8px">
-      Fast mode uses selectable PDF text first. It does not OCR every page, so it is much faster than the previous version.
-      If a page has no usable text, that page is shown for manual review instead of blocking the whole test.
-    </div>
-  </div>
-
-  <div id="summary" class="card hidden"></div>
-  <div id="questions"></div>
+<section id="setup" class="setup">
+<h1>JEE Advanced Mock Test</h1><p>Question paper PDF upload karo. Questions detect hone ke baad real-test style interface open hoga.</p>
+<div class="upload-grid">
+<label class="filebox">📄 Question Paper PDF<input id="paper" type="file" accept=".pdf,application/pdf"></label>
+<label class="filebox">🔑 Answer Key (optional)<input id="key" type="file" accept=".pdf,.txt,.csv"></label>
 </div>
+<div class="setup-actions"><button class="btn primary" id="analyse">Analyse & Start Test</button><button class="btn" id="clear">Clear</button></div>
+<div class="progress"><div class="bar" id="bar"></div></div><div class="status" id="status">Paper select karo, phir Analyse & Start Test dabao.</div>
+</section>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+<section id="test" class="test hidden">
+<header class="header"><div class="brand"><div class="brand-mark">J</div><div>JEE Advanced <span class="section-name">Computer Based Test</span></div></div><div class="timerbox"><span>Time Left</span><span class="timer" id="timer">02:00:00</span><button class="submit-top" id="submitTop">Submit Test</button></div></header>
+<div class="body">
+<main class="main">
+<div class="qbar"><div class="qtitle" id="qtitle">Question 1</div><div class="qtype" id="qtype">Single correct</div></div>
+<div class="question-scroll"><div class="question-card">
+<div class="crop-title">Question</div><div class="crop-wrap" id="cropWrap"></div><div class="options" id="options"></div>
+</div></div>
+<div class="bottom"><div class="bottom-left"><button class="navbtn" id="prev">← Previous</button><button class="navbtn orange" id="clearResponse">Clear Response</button></div><div class="bottom-right"><button class="navbtn orange" id="reviewNext">Mark for Review & Next</button><button class="navbtn primary" id="saveNext">Save & Next →</button></div></div>
+</main>
+<aside class="palette"><div class="profile"><div class="avatar">A</div><div><b>Candidate</b><br><small>JEE Advanced</small></div></div><div class="palette-head">Question Palette</div><div class="legend"><span><i class="dot not"></i>Not Answered</span><span><i class="dot at"></i>Answered</span><span><i class="dot review"></i>Review</span><span><i class="dot cur"></i>Current</span></div><div class="nums" id="nums"></div></aside>
+</div>
+</section>
+
+<section id="result" class="result hidden"><div class="result-card"><h2>Test Submitted ✅</h2><div id="resultText"></div><br><button class="btn primary" id="restart">Back to Test</button></div></section>
+
 <script type="module">
-const pdfjsLib = await import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs");
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
-
-const $=id=>document.getElementById(id);
-let stopped=false;
-
+const pdfjs=await import("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs");
+pdfjs.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
+const $=id=>document.getElementById(id);let qs=[],answers={},flags={},cur=0,endAt=0,timerHandle=null;
+const norm=s=>s.replace(/\u00a0/g," ").replace(/[ \t]+/g," ").replace(/\n{3,}/g,"\n\n").trim();
+function progress(n,s){$("bar").style.width=n+"%";$("status").textContent=s}
+function detectStarts(items){const out=[];const re=/^(?:Q(?:uestion)?\.?\s*)?(\d{1,3})[\.\):\-]\s+/i;for(let i=0;i<items.length;i++){const t=(items[i].str||"").trim();const m=t.match(re);if(m)out.push({num:m[1],i})}return out}
+function typeOf(t){if(/multiple correct|one or more|more than one|multiple answers/i.test(t))return"Multiple correct";if(/numerical answer|integer answer|answer is an integer/i.test(t))return"Numerical answer";return"Single correct"}
+async function getPageData(page){const c=await page.getTextContent({normalizeWhitespace:true});const items=(c.items||[]).filter(x=>x.str&&x.str.trim());const lines=items.map((x,i)=>({str:x.str.trim(),x:x.transform?.[4]||0,y:x.transform?.[5]||0,w:x.width||0,h:x.height||0,i}));return {page,items:lines,text:norm(lines.map(x=>x.str).join("\n"))}}
+async function renderCrop(q){const holder=$("cropWrap");holder.innerHTML="";for(const part of q.parts){const page=part.dataPage;const vp0=page.getViewport({scale:1});const scale=Math.min(2.0,1200/vp0.width);const vp=page.getViewport({scale});const canvas=document.createElement("canvas");canvas.width=Math.floor(vp.width);canvas.height=Math.floor(vp.height);const ctx=canvas.getContext("2d");await page.render({canvasContext:ctx,viewport:vp}).promise;
+ let top=Math.max(0,vp.height-(part.yTop+part.hTop+18)*scale);let bottom=Math.min(vp.height,vp.height-(part.yBottom-18)*scale);if(bottom<=top){top=0;bottom=vp.height}let ch=Math.max(40,bottom-top);const crop=document.createElement("canvas");crop.width=canvas.width;crop.height=Math.floor(ch);crop.getContext("2d").drawImage(canvas,0,top,crop.width,crop.height,0,0,crop.width,crop.height);const img=document.createElement("img");img.className="crop-img";img.src=crop.toDataURL("image/png");holder.appendChild(img)}
+ if(!holder.children.length){holder.innerHTML='<div class="crop-fallback">'+q.text.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))+'</div>'}}
+function render(){const q=qs[cur];$("qtitle").textContent=`Question ${q.num}  •  ${cur+1} / ${qs.length}`;$("qtype").textContent=q.type;renderCrop(q);const box=$("options");box.innerHTML="";
+ if(q.type==="Numerical answer"){const l=document.createElement("label");l.className="option";l.innerHTML='<span class="option-label">Answer:</span><input class="numinput" id="numans" type="text" inputmode="decimal" placeholder="Enter numerical answer">';box.appendChild(l);$("numans").value=answers[q.id]??"";$("numans").oninput=e=>answers[q.id]=e.target.value}
+ else for(let i=1;i<=4;i++){const multi=q.type==="Multiple correct";const checked=multi?(answers[q.id]||[]).includes(i):answers[q.id]===i;const l=document.createElement("div");l.className="option"+(checked?" selected":"");l.innerHTML=(multi?'<span class="check"></span>':'<span class="radio"></span>')+`<span class="option-label">Option ${i}</span>`;l.onclick=()=>{if(multi){let a=answers[q.id]||[];answers[q.id]=a.includes(i)?a.filter(v=>v!==i):[...a,i]}else answers[q.id]=i;render()};box.appendChild(l)}
+ $("prev").disabled=cur===0;document.querySelectorAll(".num").forEach((n,i)=>{n.className="num"+(i===cur?" current":"")+(answers[qs[i].id]!==undefined?" attempted":"")+(flags[qs[i].id]?" review":"")});
+}
+function buildNums(){const b=$("nums");b.innerHTML="";qs.forEach((q,i)=>{const n=document.createElement("button");n.className="num";n.textContent=q.num;n.onclick=()=>{cur=i;render()};b.appendChild(n)})}
+function submit(){clearInterval(timerHandle);$("test").classList.add("hidden");$("result").classList.remove("hidden");$("resultText").innerHTML=`Total Questions: <b>${qs.length}</b><br>Attempted: <b>${Object.keys(answers).length}</b><br><br><small>Answer-key scoring ko next step mein connect kiya ja sakta hai.</small>`}
+function startTimer(){clearInterval(timerHandle);endAt=Date.now()+2*60*60*1000;timerHandle=setInterval(()=>{let sec=Math.max(0,Math.floor((endAt-Date.now())/1000));let h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;$("timer").textContent=[h,m,s].map(v=>String(v).padStart(2,"0")).join(":");if(sec===0)submit()},250)}
+$("analyse").onclick=async()=>{const f=$("paper").files[0];if(!f){alert("Pehle Question Paper PDF select karo.");return}$("analyse").disabled=true;qs=[];answers={};flags={};cur=0;try{progress(2,"PDF load ho raha hai…");const pdf=await pdfjs.getDocument({data:await f.arrayBuffer()}).promise;const pages=[];for(let p=1;p<=pdf.numPages;p++){progress(Math.round(p/pdf.numPages*75),`Page ${p}/${pdf.numPages} analyse ho raha hai…`);const page=await pdf.getPage(p);const d=await getPageData(page);d.pdfPage=page;pages.push(d);await new Promise(r=>setTimeout(r,0))}
+ for(let p=0;p<pages.length;p++){const d=pages[p],st=detectStarts(d.items);for(let i=0;i<st.length;i++){const next=st[i+1];const start=st[i].i;const end=next?next.i:d.items.length;const text=norm(d.items.slice(start,end).map(x=>x.str).join("\n"));const first=d.items[start];const last=d.items[Math.max(start,end-1)];qs.push({id:qs.length+1,num:st[i].num,type:typeOf(text),text,page:p+1,parts:[{dataPage:d.pdfPage,yTop:first.y,hTop:first.h,yBottom:last.y}],});}}
+ if(!qs.length)throw new Error("Question numbering detect nahi hui.");progress(100,`Done — ${qs.length} questions detected.`);buildNums();$("setup").classList.add("hidden");$("test").classList.remove("hidden");await render();startTimer();}catch(e){progress(0,"Error: "+e.message);alert(e.message)}$("analyse").disabled=false};
+$("prev").onclick=()=>{if(cur>0){cur--;render()}};
+$("saveNext").onclick=()=>{if(cur<qs.length-1){cur++;render()}else submit()};
+$("reviewNext").onclick=()=>{flags[qs[cur].id]=true;if(cur<qs.length-1){cur++;render()}else submit()};
+$("clearResponse").onclick=()=>{delete answers[qs[cur].id];render()};
+$("submitTop").onclick=()=>{if(confirm("Test submit karna hai?"))submit()};
+$("restart").onclick=()=>{$("result").classList.add("hidden");$("test").classList.remove("hidden");startTimer();render()};
 $("clear").onclick=()=>location.reload();
-
-function setProgress(n,msg){
-  $("bar").style.width=n+"%";
-  $("status").textContent=msg;
-}
-
-function normalize(s){
-  return s.replace(/\u00a0/g," ").replace(/[ \t]+/g," ").replace(/\n{3,}/g,"\n\n").trim();
-}
-
-/* Detect common JEE-style question starts. We deliberately use several
-   patterns because Advanced papers can change numbering/layout. */
-function findStarts(text){
-  const lines=text.split(/\n/).map(x=>x.trim()).filter(Boolean);
-  const starts=[];
-  const patterns=[
-    /^(?:Q(?:uestion)?\.?\s*)?(\d{1,3})[\.\):\-]\s+/i,
-    /^(\d{1,3})\s*[\.\)]\s+/,
-    /^(?:Q|Question)\s*(\d{1,3})\b/i
-  ];
-  for(let i=0;i<lines.length;i++){
-    for(const p of patterns){
-      const m=lines[i].match(p);
-      if(m){ starts.push({num:m[1], line:i, text:lines[i]}); break; }
-    }
-  }
-  // remove duplicates / impossible jumps
-  const out=[];
-  for(const s of starts){
-    if(!out.length || s.line-out[out.length-1].line>1) out.push(s);
-  }
-  return out;
-}
-
-function guessType(txt){
-  const t=txt.toLowerCase();
-  if(/more than one|one or more|multiple correct|multiple answers/.test(t)) return "Multiple correct";
-  if(/integer|numerical answer|answer is an integer/.test(t)) return "Numerical answer";
-  return "Single correct";
-}
-
-async function readPage(page){
-  const tc=await page.getTextContent({normalizeWhitespace:true});
-  const items=tc.items||[];
-  // Sort approximately top-to-bottom then left-to-right.
-  items.sort((a,b)=>{
-    const ay=a.transform?.[5]??0, by=b.transform?.[5]??0;
-    if(Math.abs(ay-by)>4) return by-ay;
-    return (a.transform?.[4]??0)-(b.transform?.[4]??0);
-  });
-  return normalize(items.map(x=>x.str).join("\n"));
-}
-
-function renderQuestion(q){
-  const div=document.createElement("div");
-  div.className="q";
-  div.innerHTML=`
-    <div class="qhead">
-      <strong>Question ${q.num}</strong>
-      <span class="badge">${q.type}</span>
-    </div>
-    <div style="padding:14px;white-space:pre-wrap;line-height:1.5">${escapeHtml(q.text)}</div>
-    <div class="opts">
-      <label class="opt"><input type="${q.type==="Multiple correct"?"checkbox":"radio"}" name="q${q.id}"> Option 1</label>
-      <label class="opt"><input type="${q.type==="Multiple correct"?"checkbox":"radio"}" name="q${q.id}"> Option 2</label>
-      <label class="opt"><input type="${q.type==="Multiple correct"?"checkbox":"radio"}" name="q${q.id}"> Option 3</label>
-      <label class="opt"><input type="${q.type==="Multiple correct"?"checkbox":"radio"}" name="q${q.id}"> Option 4</label>
-    </div>`;
-  return div;
-}
-function escapeHtml(s){
-  return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-}
-
-$("start").onclick=async()=>{
-  const file=$("paper").files[0];
-  if(!file){alert("Pehle Question Paper PDF select karo.");return;}
-  stopped=false;
-  $("questions").innerHTML="";
-  $("summary").classList.add("hidden");
-  try{
-    setProgress(2,"PDF load ho raha hai…");
-    const data=await file.arrayBuffer();
-    const pdf=await pdfjsLib.getDocument({data}).promise;
-    const all=[];
-    for(let p=1;p<=pdf.numPages;p++){
-      if(stopped) return;
-      const page=await pdf.getPage(p);
-      const text=await readPage(page);
-      all.push({page:p,text});
-      setProgress(Math.round(p/pdf.numPages*75),`Page ${p}/${pdf.numPages} read ho raha hai…`);
-      // yield to browser so UI stays responsive
-      await new Promise(r=>setTimeout(r,0));
-    }
-
-    setProgress(82,"Question starts detect ho rahe hain…");
-    const detected=[];
-    for(const pg of all){
-      const starts=findStarts(pg.text);
-      if(starts.length){
-        for(let i=0;i<starts.length;i++){
-          const a=starts[i], b=starts[i+1];
-          detected.push({
-            id:detected.length+1,
-            num:a.num,
-            page:pg.page,
-            type:guessType(pg.text.slice(
-              pg.text.indexOf(a.text),
-              b ? pg.text.indexOf(b.text) : pg.text.length
-            )),
-            text: pg.text.slice(
-              pg.text.indexOf(a.text),
-              b ? pg.text.indexOf(b.text) : pg.text.length
-            )
-          });
-        }
-      }
-    }
-
-    setProgress(95,"Result bana raha hoon…");
-    if(!detected.length){
-      $("questions").innerHTML=`<div class="card"><b>Question numbers detect nahi hue.</b><p>Is PDF mein selectable text nahi hai ya numbering unusual hai. Current version poore pages ko slow OCR karne ke bajay rukta nahi hai.</p><p>PDF ko text-based version mein upload karna best rahega.</p></div>`;
-    }else{
-      const frag=document.createDocumentFragment();
-      detected.forEach(q=>frag.appendChild(renderQuestion(q)));
-      $("questions").appendChild(frag);
-    }
-    $("summary").classList.remove("hidden");
-    $("summary").innerHTML=`<b>Done ✅</b><br>PDF pages: ${pdf.numPages} &nbsp; | &nbsp; Detected questions: ${detected.length}`;
-    setProgress(100,"Done ✅");
-  }catch(e){
-    console.error(e);
-    setProgress(0,"Error: "+e.message);
-    alert("PDF read nahi ho paaya. Browser console mein details milengi.");
-  }
-};
 </script>
-</body>
-</html>
+</body></html>
